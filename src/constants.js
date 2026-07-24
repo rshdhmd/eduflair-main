@@ -6,6 +6,7 @@ export const ADDRESS          = '3rd Floor, RP Mall, Mavoor Road, Calicut, Keral
 export const HOURS            = 'Mon–Sat, 9am–6pm';
 export const FACEBOOK_URL     = '#';
 export const INSTAGRAM_URL    = '#';
+export const YOUTUBE_URL      = 'https://www.youtube.com/@eduflairlearningsolutions';
 
 // Brand colours (for reference in non-Tailwind contexts)
 export const COLOR_TEAL = '#003c4c';

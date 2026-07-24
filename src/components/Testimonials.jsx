@@ -1,3 +1,5 @@
+import { useRef } from 'react';
+
 /*
  * Student photos — replace each avatar with:
  *   import nandanaPhoto from '../assets/testimonials/nandana.jpg'
@@ -51,58 +53,109 @@ function Stars({ count }) {
   );
 }
 
+function ArrowButton({ direction, onClick }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={direction === 'prev' ? 'Previous testimonial' : 'Next testimonial'}
+      className="w-11 h-11 rounded-full bg-white shadow-md flex items-center justify-center hover:shadow-lg transition-shadow flex-shrink-0"
+      style={{ color: '#003c4c' }}
+    >
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        {direction === 'prev'
+          ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />}
+      </svg>
+    </button>
+  );
+}
+
 export default function Testimonials() {
+  const scrollerRef = useRef(null);
+
+  const scrollByCard = (direction) => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const card = el.querySelector('[data-card]');
+    const gap = 24;
+    const amount = card ? card.offsetWidth + gap : el.clientWidth;
+    const maxScroll = el.scrollWidth - el.clientWidth;
+
+    if (direction > 0 && el.scrollLeft >= maxScroll - 4) {
+      el.scrollTo({ left: 0, behavior: 'smooth' });
+      return;
+    }
+    if (direction < 0 && el.scrollLeft <= 4) {
+      el.scrollTo({ left: maxScroll, behavior: 'smooth' });
+      return;
+    }
+    el.scrollBy({ left: amount * direction, behavior: 'smooth' });
+  };
+
   return (
     <section className="py-20" style={{ backgroundColor: '#e8f4f7' }}>
       <div className="max-w-7xl mx-auto px-6">
 
         {/* Header */}
-        <div className="text-center mb-14">
-          <p className="font-semibold text-xs uppercase tracking-widest mb-3" style={{ color: '#ffa800' }}>
-            Student Stories
-          </p>
-          <h2 className="text-3xl md:text-4xl font-extrabold mb-4" style={{ color: '#003c4c' }}>
-            What Our Students Say
-          </h2>
-          <div className="w-16 h-1 mx-auto rounded-full" style={{ backgroundColor: '#ffa800' }} />
+        <div className="flex items-end justify-between mb-14 gap-6">
+          <div className="text-center flex-1">
+            <p className="font-semibold text-xs uppercase tracking-widest mb-3" style={{ color: '#ffa800' }}>
+              Student Stories
+            </p>
+            <h2 className="text-3xl md:text-4xl font-extrabold mb-4" style={{ color: '#003c4c' }}>
+              What Our Students Say
+            </h2>
+            <div className="w-16 h-1 mx-auto rounded-full" style={{ backgroundColor: '#ffa800' }} />
+          </div>
         </div>
 
-        {/* Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {testimonials.map((t, i) => (
-            <div
-              key={i}
-              className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col"
-              style={{ borderBottom: '3px solid #ffa800' }}
-            >
-              {/* Quote */}
-              <svg className="w-8 h-8 mb-4 flex-shrink-0" fill="#ffa800" viewBox="0 0 32 32" style={{ opacity: 0.3 }}>
-                <path d="M10 8C5.582 8 2 11.582 2 16v8h8v-8H6c0-2.206 1.794-4 4-4V8zm14 0c-4.418 0-8 3.582-8 8v8h8v-8h-4c0-2.206 1.794-4 4-4V8z"/>
-              </svg>
+        {/* Slider */}
+        <div className="relative flex items-center gap-4">
+          <ArrowButton direction="prev" onClick={() => scrollByCard(-1)} />
 
-              <Stars count={t.rating} />
-              <p className="text-gray-600 text-sm leading-relaxed mt-3 flex-1">"{t.quote}"</p>
+          <div
+            ref={scrollerRef}
+            className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar flex-1"
+          >
+            {testimonials.map((t, i) => (
+              <div
+                key={i}
+                data-card
+                className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col snap-start flex-shrink-0 w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]"
+                style={{ borderBottom: '3px solid #ffa800' }}
+              >
+                {/* Quote */}
+                <svg className="w-8 h-8 mb-4 flex-shrink-0" fill="#ffa800" viewBox="0 0 32 32" style={{ opacity: 0.3 }}>
+                  <path d="M10 8C5.582 8 2 11.582 2 16v8h8v-8H6c0-2.206 1.794-4 4-4V8zm14 0c-4.418 0-8 3.582-8 8v8h8v-8h-4c0-2.206 1.794-4 4-4V8z"/>
+                </svg>
 
-              <div className="flex items-center gap-3 mt-5 pt-4 border-t border-gray-100">
-                {/* REPLACE with <img src={photo} className="w-11 h-11 rounded-full object-cover flex-shrink-0" /> */}
-                <div
-                  className="w-11 h-11 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
-                  style={{ backgroundColor: t.color }}
-                >
-                  {t.initials}
-                </div>
-                <div>
-                  <p className="font-bold text-sm" style={{ color: '#003c4c' }}>{t.name}</p>
-                  <span
-                    className="text-xs font-semibold px-2 py-0.5 rounded-full"
-                    style={{ backgroundColor: '#ffa800', color: '#003c4c' }}
+                <Stars count={t.rating} />
+                <p className="text-gray-600 text-sm leading-relaxed mt-3 flex-1">"{t.quote}"</p>
+
+                <div className="flex items-center gap-3 mt-5 pt-4 border-t border-gray-100">
+                  {/* REPLACE with <img src={photo} className="w-11 h-11 rounded-full object-cover flex-shrink-0" /> */}
+                  <div
+                    className="w-11 h-11 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
+                    style={{ backgroundColor: t.color }}
                   >
-                    {t.badge}
-                  </span>
+                    {t.initials}
+                  </div>
+                  <div>
+                    <p className="font-bold text-sm" style={{ color: '#003c4c' }}>{t.name}</p>
+                    <span
+                      className="text-xs font-semibold px-2 py-0.5 rounded-full"
+                      style={{ backgroundColor: '#ffa800', color: '#003c4c' }}
+                    >
+                      {t.badge}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+
+          <ArrowButton direction="next" onClick={() => scrollByCard(1)} />
         </div>
       </div>
     </section>

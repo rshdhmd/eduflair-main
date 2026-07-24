@@ -1,8 +1,8 @@
 const stats = [
-  { value: '0k+', label: 'German Students Enrolled' },
-  { value: '0+',  label: 'Placement Success Rate' },
-  { value: '0+',  label: 'Visa Success Rate' },
-  { value: '0+',  label: 'Years of Experience' },
+  { value: '1K+',  label: 'German Students Enrolled' },
+  { value: '950+', label: 'Placement Success Rate' },
+  { value: '990+', label: 'Visa Success Rate' },
+  { value: '10+',  label: 'Years of Experience' },
 ];
 
 export default function Stats() {

@@ -117,10 +117,10 @@ export default function ContactPage() {
                     <div className="relative">
                       <select name="service" value={form.service} onChange={handle} className={`${inputClass} appearance-none cursor-pointer`}>
                         <option value="">Select a service</option>
+                        <option>German Language</option>
+                        <option>Ausbildung Program</option>
+                        <option>Nursing Placement</option>
                         <option>Study Abroad</option>
-                        <option>Ausbildung in Germany</option>
-                        <option>Language & Skill Academy</option>
-                        <option>Placement Consultancy</option>
                         <option>Not sure yet</option>
                       </select>
                       <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
@@ -142,6 +142,65 @@ export default function ContactPage() {
                 </form>
               </>
             )}
+          </div>
+        </div>
+
+        {/* Our Locations */}
+        <div className="mt-20 space-y-16">
+          <div>
+            <h2 className="text-2xl font-extrabold mb-6" style={{ color: '#003c4c' }}>Calicut Head Office</h2>
+            <div className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm mb-8">
+              <iframe
+                title="Eduflair Calicut Head Office Map"
+                src="https://www.google.com/maps?cid=17122405543329733042&output=embed"
+                className="w-full h-[400px] border-0"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+            <div className="grid sm:grid-cols-3 gap-8">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">General Inquiries</p>
+                <p className="text-sm font-semibold" style={{ color: '#003c4c' }}>egifl@eduflair.com</p>
+                <p className="text-sm font-semibold" style={{ color: '#003c4c' }}>{PHONE}</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">Calicut Head Office</p>
+                <p className="text-sm font-semibold" style={{ color: '#003c4c' }}>3rd Floor, Building No: 63/2721, RP Mall, Kozhikkode, Mavoor Road</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">Working Hours</p>
+                <p className="text-sm font-semibold" style={{ color: '#003c4c' }}>{HOURS}</p>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h2 className="text-2xl font-extrabold mb-6" style={{ color: '#003c4c' }}>Perinthalmanna Branch</h2>
+            <div className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm mb-8">
+              <iframe
+                title="Eduflair Perinthalmanna Branch Map"
+                src="https://www.google.com/maps?cid=16346435502116965555&output=embed"
+                className="w-full h-[400px] border-0"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+            <div className="grid sm:grid-cols-3 gap-8">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">General Inquiries</p>
+                <p className="text-sm font-semibold" style={{ color: '#003c4c' }}>info@eduflair.com</p>
+                <p className="text-sm font-semibold" style={{ color: '#003c4c' }}>{PHONE}</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">Perinthalmanna Branch</p>
+                <p className="text-sm font-semibold" style={{ color: '#003c4c' }}>2nd Floor, VAVA'S Mall, Perinthalmanna</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">Working Hours</p>
+                <p className="text-sm font-semibold" style={{ color: '#003c4c' }}>9 AM – 5:30 PM, Mon to Sat</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

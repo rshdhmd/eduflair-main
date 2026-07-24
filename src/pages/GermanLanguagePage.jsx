@@ -11,7 +11,7 @@ const LEVELS = [
 ];
 
 const WHY = [
-  { title: 'Kerala\'s Leading Language Institute', desc: 'Trusted by thousands of students who have achieved B2 and secured placements in Germany.' },
+  { title: 'India\'s No:1 Language Institute', desc: 'Trusted by thousands of students who have achieved B2 and secured placements in Germany.' },
   { title: 'Expert Trainers', desc: 'Our trainers are TELC/Goethe certified with years of experience in exam-focused coaching.' },
   { title: 'Nursing-Specific Curriculum', desc: 'Specialised German modules for healthcare workers including medical terminology.' },
   { title: 'Small Batch Sizes', desc: 'Maximum 15 students per batch for personalised attention and faster progress.' },

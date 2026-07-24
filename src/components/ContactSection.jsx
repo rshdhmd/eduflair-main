@@ -165,10 +165,10 @@ export default function ContactSection() {
                     <div className="relative">
                       <select name="service" value={form.service} onChange={handle} className={`${inputClass} appearance-none cursor-pointer`}>
                         <option value="">Select a service</option>
+                        <option>German Language</option>
+                        <option>Ausbildung Program</option>
+                        <option>Nursing Placement</option>
                         <option>Study Abroad</option>
-                        <option>Ausbildung in Germany</option>
-                        <option>Language & Skill Academy</option>
-                        <option>Placement Consultancy</option>
                         <option>Not sure yet</option>
                       </select>
                       <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
