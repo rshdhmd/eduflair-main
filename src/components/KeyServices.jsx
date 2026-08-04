@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+
 const keyServices = [
   'Personalized University Selection',
   'Application & Admission Assistance',
@@ -6,6 +8,125 @@ const keyServices = [
   'Scholarship & Financial Aid Support',
   'Pre-Departure & Post-Arrival Support',
 ];
+
+const VIDEO_IDS = [
+  'uq3S4hKHYcA',
+  '5xSKeP0APSY',
+  '70ZP-DiE8wY',
+  'cELke30Rgo4',
+  '--gdYYb_nE0',
+  'rkMc_J4EJl0',
+  'Ohlred9s9jw',
+];
+
+function VideoCarousel() {
+  const [index, setIndex] = useState(0);
+  const [playingId, setPlayingId] = useState(null);
+  const [paused, setPaused] = useState(false);
+
+  useEffect(() => {
+    if (paused || playingId) return;
+    const timer = setInterval(() => {
+      setIndex((i) => (i + 1) % VIDEO_IDS.length);
+    }, 3500);
+    return () => clearInterval(timer);
+  }, [paused, playingId]);
+
+  return (
+    <div
+      className="relative"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
+      <div className="overflow-hidden rounded-2xl shadow-xl">
+        <div
+          className="flex transition-transform duration-700 ease-in-out"
+          style={{ transform: `translateX(-${index * 100}%)` }}
+        >
+          {VIDEO_IDS.map((id) => (
+            <button
+              key={id}
+              onClick={() => setPlayingId(id)}
+              className="relative w-full flex-shrink-0 h-96 group"
+              aria-label="Play video"
+            >
+              <img
+                src={`https://img.youtube.com/vi/${id}/hqdefault.jpg`}
+                alt="Eduflair video"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors flex items-center justify-center">
+                <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                  <svg className="w-6 h-6 ml-1" fill="#003c4c" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Prev / Next */}
+      <button
+        onClick={() => setIndex((i) => (i - 1 + VIDEO_IDS.length) % VIDEO_IDS.length)}
+        className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/90 shadow-md flex items-center justify-center text-lg font-bold hover:bg-white transition-colors"
+        style={{ color: '#003c4c' }}
+        aria-label="Previous video"
+      >
+        ‹
+      </button>
+      <button
+        onClick={() => setIndex((i) => (i + 1) % VIDEO_IDS.length)}
+        className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/90 shadow-md flex items-center justify-center text-lg font-bold hover:bg-white transition-colors"
+        style={{ color: '#003c4c' }}
+        aria-label="Next video"
+      >
+        ›
+      </button>
+
+      {/* Dots */}
+      <div className="flex justify-center gap-2 mt-5">
+        {VIDEO_IDS.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setIndex(i)}
+            className="h-2 rounded-full transition-all"
+            style={{
+              width: i === index ? '20px' : '8px',
+              backgroundColor: i === index ? '#ffa800' : '#d0e8ef',
+            }}
+            aria-label={`Go to video ${i + 1}`}
+          />
+        ))}
+      </div>
+
+      {playingId && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-6"
+          onClick={() => setPlayingId(null)}
+        >
+          <button
+            className="absolute top-6 right-6 text-white text-4xl leading-none hover:opacity-70"
+            onClick={() => setPlayingId(null)}
+            aria-label="Close"
+          >
+            &times;
+          </button>
+          <div className="w-full max-w-3xl aspect-video" onClick={(e) => e.stopPropagation()}>
+            <iframe
+              className="w-full h-full rounded-xl"
+              src={`https://www.youtube.com/embed/${playingId}?autoplay=1`}
+              title="Eduflair video"
+              allow="accelerate; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function KeyServices() {
   return (
@@ -40,22 +161,8 @@ export default function KeyServices() {
             </ul>
           </div>
 
-          {/* Right — image */}
-          <div className="relative">
-            <img
-              src="/images/DCS03993-1-768x512.jpg"
-              alt="Eduflair classroom session"
-              className="w-full h-96 rounded-2xl object-cover shadow-xl"
-            />
-            {/* Floating badge */}
-            <div
-              className="absolute -bottom-5 -left-5 rounded-2xl px-6 py-4 shadow-lg hidden lg:block"
-              style={{ backgroundColor: '#003c4c' }}
-            >
-              <p className="text-3xl font-extrabold text-white">10<span style={{ color: '#ffa800' }}>+</span></p>
-              <p className="text-white/70 text-xs mt-0.5">Years of Excellence</p>
-            </div>
-          </div>
+          {/* Right — video carousel */}
+          <VideoCarousel />
         </div>
       </div>
     </section>
