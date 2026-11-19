@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Layout from '../components/Layout';
 import { api } from '../lib/api';
+import { useSeo, toMetaDescription } from '../seo/useSeo';
+import { SITE } from '../seo/seo.config';
 
 export default function BlogPostPage() {
   const { slug } = useParams();
@@ -24,6 +26,19 @@ export default function BlogPostPage() {
       }
     })();
   }, [slug]);
+
+  useSeo(
+    post
+      ? {
+          title: `${post.title} | Eduflair Blog`,
+          description: toMetaDescription(post.excerpt || post.body_html) || `${post.title} – ${SITE.name}`,
+          image: post.cover_image || undefined,
+          type: 'article',
+        }
+      : error && !loading
+        ? { title: `Post not found | ${SITE.name}`, description: 'This blog post could not be found.', noindex: true }
+        : null
+  );
 
   return (
     <Layout>

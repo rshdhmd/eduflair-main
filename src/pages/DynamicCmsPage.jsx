@@ -4,6 +4,7 @@ import CmsPageView from '../components/CmsPageView';
 import Layout from '../components/Layout';
 import { api } from '../lib/api';
 import { getPageDef } from '../cms/pageRegistry';
+import { useSeo } from '../seo/useSeo';
 
 /**
  * Dynamic CMS page at /p/:slug — for custom pages added in admin
@@ -31,6 +32,18 @@ export default function DynamicCmsPage() {
       }
     })();
   }, [pageKey, registry]);
+
+  const seoDef = registry || custom;
+  useSeo(
+    loading
+      ? null
+      : seoDef
+        ? {
+            title: `${seoDef.title} | Eduflair`,
+            description: `Learn more about ${seoDef.title} with Eduflair Learning Solutions – study abroad, language training and overseas placement experts in Kerala.`,
+          }
+        : { title: 'Page not found | Eduflair Learning Solutions', description: 'This page could not be found.', noindex: true }
+  );
 
   if (loading) {
     return (

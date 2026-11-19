@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ScrollToTop from './components/ScrollToTop';
+import { RouteSeo } from './seo/useSeo';
 import { AuthProvider } from './lib/auth';
 
 import Home                  from './pages/Home';
@@ -48,6 +49,7 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <ScrollToTop />
+        <RouteSeo />
         <Routes>
           {/* Home */}
           <Route path="/"                          element={<Home />} />
