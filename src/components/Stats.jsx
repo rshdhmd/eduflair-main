@@ -1,11 +1,17 @@
-const stats = [
-  { value: '1K+',  label: 'German Students Enrolled' },
+import { usePageContent } from '../hooks/usePageContent';
+import { asList } from '../cms/contentHelpers';
+
+const DEFAULT_STATS = [
+  { value: '1K+', label: 'German Students Enrolled' },
   { value: '950+', label: 'Placement Success Rate' },
   { value: '990+', label: 'Visa Success Rate' },
-  { value: '10+',  label: 'Years of Experience' },
+  { value: '10+', label: 'Years of Experience' },
 ];
 
 export default function Stats() {
+  const { content } = usePageContent('home', { stats: DEFAULT_STATS });
+  const stats = asList(content.stats, DEFAULT_STATS);
+
   return (
     <section style={{ backgroundColor: '#003c4c' }}>
       <div className="max-w-7xl mx-auto px-6 py-10">

@@ -1,16 +1,26 @@
 import { Link } from 'react-router-dom';
 import { WHATSAPP_NUMBER, PHONE } from '../constants';
+import { usePageContent } from '../hooks/usePageContent';
+
+const DEFAULTS = {
+  cta_badge: "We're Here For You",
+  cta_title: 'Need Assistance?',
+  cta_text: 'Reach out to us for support! Our counsellors are available Mon–Sat, 9am–6pm.',
+  cta_button: 'Get Free Consultation',
+};
 
 export default function NeedAssistance() {
+  const { content } = usePageContent('shared', DEFAULTS);
+
   return (
     <section className="py-20" style={{ backgroundColor: '#003c4c' }}>
       <div className="max-w-7xl mx-auto px-6 text-center">
         <p className="font-semibold text-xs uppercase tracking-widest mb-4" style={{ color: '#ffa800' }}>
-          We're Here For You
+          {content.cta_badge}
         </p>
-        <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-3">Need Assistance?</h2>
+        <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-3">{content.cta_title}</h2>
         <p className="text-white/70 text-lg mb-10 max-w-xl mx-auto">
-          Reach out to us for support! Our counsellors are available Mon–Sat, 9am–6pm.
+          {content.cta_text}
         </p>
 
         <div className="flex flex-wrap items-center justify-center gap-4">
@@ -19,7 +29,7 @@ export default function NeedAssistance() {
             className="font-bold px-8 py-3.5 rounded-md transition-opacity hover:opacity-90 text-sm"
             style={{ backgroundColor: '#ffa800', color: '#003c4c' }}
           >
-            Get Free Consultation
+            {content.cta_button}
           </Link>
           <a
             href={`tel:${PHONE}`}

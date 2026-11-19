@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { usePageContent } from '../hooks/usePageContent';
+import { asList } from '../cms/contentHelpers';
 
-const faqs = [
+const DEFAULT_FAQS = [
   {
     q: 'What services does Eduflair offer?',
     a: 'Eduflair offers four core services: Study Abroad consultancy (UK, Canada, Ireland, France, Austria), Ausbildung in Germany, Language & Skill Academy (German A1–B2, IELTS, OET), and Placement Consultancy for healthcare professionals.',
@@ -15,17 +17,22 @@ const faqs = [
   },
   {
     q: 'How long does the entire abroad process take?',
-    a: 'Typically 6–12 months from your first counselling session to flying out. Language training (3–6 months) runs first, followed by the application and visa process. Some of our students have received offers in as little as 3 months.',
+    a: 'Typically 6–12 months from your first counselling session to flying out. Language training (3–6 months) runs first, followed by the application and visa process.',
   },
   {
     q: 'What are the costs involved? Are scholarships available?',
-    a: 'We are fully transparent about our fees from day one. Several Ausbildung programmes are employer-funded with zero tuition. For university programmes, we actively help you identify and apply for scholarships and financial aid.',
+    a: 'We are fully transparent about our fees from day one. Several Ausbildung programmes are employer-funded with zero tuition. For university programmes, we actively help you identify and apply for scholarships.',
   },
   {
     q: 'Where is your office and how can I visit?',
-    a: 'We are located at the 3rd Floor, RP Mall, Mavoor Road, Calicut, Kerala – 673004. Walk-ins are welcome Monday to Saturday, 9am–6pm. Online consultations are also available — book via our contact page.',
+    a: 'We are located at the 3rd Floor, RP Mall, Mavoor Road, Calicut, Kerala – 673004. Walk-ins are welcome Monday to Saturday, 9am–6pm.',
   },
 ];
+
+function stripHtml(html) {
+  if (!html) return '';
+  return String(html).replace(/<[^>]+>/g, '');
+}
 
 function FAQItem({ q, a, isOpen, onToggle }) {
   return (
@@ -37,7 +44,7 @@ function FAQItem({ q, a, isOpen, onToggle }) {
         <span className="font-semibold text-sm leading-snug" style={{ color: '#003c4c' }}>{q}</span>
         <div
           className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-colors"
-          style={{ backgroundColor: isOpen ? '#ffa800' : '#e8f4f7', color: isOpen ? '#003c4c' : '#003c4c' }}
+          style={{ backgroundColor: isOpen ? '#ffa800' : '#e8f4f7', color: '#003c4c' }}
         >
           <svg className={`w-3.5 h-3.5 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
@@ -46,7 +53,7 @@ function FAQItem({ q, a, isOpen, onToggle }) {
       </button>
       {isOpen && (
         <div className="px-6 pb-5 bg-white border-t" style={{ borderColor: '#003c4c10' }}>
-          <p className="text-gray-500 text-sm leading-relaxed pt-4">{a}</p>
+          <p className="text-gray-500 text-sm leading-relaxed pt-4">{stripHtml(a)}</p>
         </div>
       )}
     </div>
@@ -55,21 +62,33 @@ function FAQItem({ q, a, isOpen, onToggle }) {
 
 export default function FAQ() {
   const [openIdx, setOpenIdx] = useState(0);
+  const { content } = usePageContent('home', {
+    faqs_badge: 'FAQ',
+    faqs_title: "Got Questions?\nWe've Got Answers",
+    faqs: DEFAULT_FAQS,
+  });
+  const faqs = asList(content.faqs, DEFAULT_FAQS);
+  const titleLines = String(content.faqs_title || '').split('\n');
 
   return (
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-6">
         <div className="lg:grid lg:grid-cols-3 lg:gap-16">
-
-          {/* Left */}
           <div className="mb-12 lg:mb-0">
-            <p className="font-semibold text-xs uppercase tracking-widest mb-3" style={{ color: '#ffa800' }}>FAQ</p>
+            <p className="font-semibold text-xs uppercase tracking-widest mb-3" style={{ color: '#ffa800' }}>
+              {content.faqs_badge || 'FAQ'}
+            </p>
             <h2 className="text-3xl md:text-4xl font-extrabold mb-4 leading-tight" style={{ color: '#003c4c' }}>
-              Got Questions?<br />We've Got Answers
+              {titleLines.map((line, i) => (
+                <span key={i}>
+                  {line}
+                  {i < titleLines.length - 1 && <br />}
+                </span>
+              ))}
             </h2>
             <div className="w-16 h-1 rounded-full mb-6" style={{ backgroundColor: '#ffa800' }} />
             <p className="text-gray-500 text-sm leading-relaxed mb-8">
-              Can't find what you're looking for? Speak directly to a counsellor — we're happy to help.
+              Can&apos;t find what you&apos;re looking for? Speak directly to a counsellor — we&apos;re happy to help.
             </p>
             <a
               href="/contact"
@@ -83,7 +102,6 @@ export default function FAQ() {
             </a>
           </div>
 
-          {/* Accordion */}
           <div className="lg:col-span-2 space-y-3">
             {faqs.map((item, i) => (
               <FAQItem

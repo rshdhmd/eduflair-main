@@ -1,0 +1,43 @@
+Eduflair CMS — Hostinger go-live checklist
+==========================================
+
+1) Create MySQL database
+   - hPanel → Databases → MySQL Databases
+   - Create database + user, grant All Privileges
+   - Note: host (usually localhost), db name, user, password
+
+2) Upload the new site zip
+   - Extract eduflair-hostinger-upload.zip into public_html
+   - Keep contact.php, api/, uploads/, .htaccess, assets/, images/, index.html
+
+3) Configure API
+   - Copy public/api/config.example.php → public/api/config.php (on server)
+   - Fill db_host, db_name, db_user, db_pass
+   - Keep secure_cookies = true on HTTPS
+
+4) Run installer once
+   - Visit https://eduflair.com/api/setup.php
+   - Create the first ADMIN account
+   - DELETE api/setup.php from the server after success
+
+5) Log in
+   - https://eduflair.com/admin/login
+   - Admins can manage Users (admin/editor roles)
+   - Editors can manage Blog, Pages, Media
+
+6) Test
+   - Create a draft blog post → Publish → view /blog
+   - Edit Home hero text under Pages → home
+   - Upload an image in Media and use it as blog cover
+   - Submit Contact form (GetLead + email still work)
+
+7) Security
+   - Delete setup.php
+   - Do not upload config.php to public Git
+   - Use strong admin passwords
+   - Purge Hostinger CDN cache after deploy
+
+Roles
+-----
+admin  = users + all content
+editor = blogs, pages, media (no user management)

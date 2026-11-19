@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { WHATSAPP_NUMBER } from '../constants';
+import { usePageContent } from '../hooks/usePageContent';
 
 const WAIcon = () => (
   <svg className="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
@@ -7,38 +8,64 @@ const WAIcon = () => (
   </svg>
 );
 
+const DEFAULTS = {
+  hero_badge: "Kerala's Study Abroad & German Careers Specialists",
+  hero_title: 'Guiding Career Success<br />Gateway to Global Education &amp; Career Success!',
+  hero_subtitle:
+    'At Eduflair, we bridge the gap between aspirations and achievements through expert study abroad consultancy, skill development, and career placement. Our mission is to equip students with the knowledge and opportunities needed to thrive in a competitive global landscape.',
+  hero_image: '/images/hero-eduflair.jpg',
+  hero_cta_primary: 'Check My Free Eligibility',
+  hero_cta_whatsapp: 'Chat on WhatsApp',
+};
+
 export default function Hero() {
+  const { content } = usePageContent('home', DEFAULTS);
+  const heroImg = content.hero_image || DEFAULTS.hero_image;
+  const isDefaultHero = heroImg === '/images/hero-eduflair.jpg' || heroImg.includes('hero-eduflair');
+
   return (
     <section className="relative overflow-hidden" style={{ backgroundColor: '#003c4c' }}>
+      {isDefaultHero ? (
+        <picture>
+          <source srcSet="/images/hero-eduflair.webp" type="image/webp" />
+          <img
+            src="/images/hero-eduflair.jpg"
+            alt=""
+            aria-hidden="true"
+            fetchPriority="high"
+            decoding="async"
+            className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
+          />
+        </picture>
+      ) : (
+        <img
+          src={heroImg}
+          alt=""
+          aria-hidden="true"
+          fetchPriority="high"
+          decoding="async"
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
+        />
+      )}
 
-      {/* Full-bleed background photo */}
-      <img
-        src="/images/JIJU1293.JPG.jpeg"
-        alt=""
-        aria-hidden="true"
-        className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
-      />
-
-      {/* Blue overlay, dark on the left fading over the photo */}
       <div
         className="absolute inset-0"
-        style={{ background: 'linear-gradient(90deg, rgba(0,60,76,0.94) 0%, rgba(0,60,76,0.82) 35%, rgba(0,60,76,0.45) 65%, rgba(0,60,76,0.2) 100%)' }}
+        style={{ background: 'linear-gradient(90deg, rgba(0,60,76,0.82) 0%, rgba(0,60,76,0.68) 35%, rgba(0,60,76,0.35) 65%, rgba(0,60,76,0.12) 100%)' }}
       />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 py-24 lg:py-32">
         <div className="max-w-xl flex flex-col items-start text-left">
-
           <p className="text-xs font-bold uppercase tracking-[0.15em] mb-5" style={{ color: '#ffa800' }}>
-            Kerala's Study Abroad &amp; German Careers Specialists
+            {content.hero_badge}
           </p>
 
-          <h1 className="text-4xl md:text-[2.75rem] font-extrabold leading-[1.1] mb-6 text-white">
-            Guiding Career Success<br />
-            Gateway to Global Education &amp; Career Success!
-          </h1>
+          <h1
+            className="text-4xl md:text-[2.75rem] font-extrabold leading-[1.1] mb-6 text-white"
+            dangerouslySetInnerHTML={{ __html: content.hero_title }}
+          />
 
           <p className="text-base leading-relaxed mb-8" style={{ color: 'rgba(255,255,255,0.75)' }}>
-            At Eduflair, we bridge the gap between aspirations and achievements through expert study abroad consultancy, skill development, and career placement. Our mission is to equip students with the knowledge and opportunities needed to thrive in a competitive global landscape.
+            {content.hero_subtitle}
           </p>
 
           <div className="flex flex-wrap gap-3">
@@ -47,7 +74,7 @@ export default function Hero() {
               className="text-sm font-bold px-6 py-3 rounded-full transition-opacity hover:opacity-90"
               style={{ backgroundColor: '#ffffff', color: '#003c4c' }}
             >
-              Check My Free Eligibility
+              {content.hero_cta_primary || 'Check My Free Eligibility'}
             </Link>
             <a
               href={`https://wa.me/${WHATSAPP_NUMBER}`}
@@ -56,7 +83,7 @@ export default function Hero() {
               className="bg-green-500 hover:bg-green-600 text-white text-sm font-bold px-6 py-3 rounded-full flex items-center gap-2 transition-colors"
             >
               <WAIcon />
-              Chat on WhatsApp
+              {content.hero_cta_whatsapp || 'Chat on WhatsApp'}
             </a>
           </div>
         </div>

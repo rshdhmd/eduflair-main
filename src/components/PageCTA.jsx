@@ -1,7 +1,11 @@
 import { Link } from 'react-router-dom';
 import { WHATSAPP_NUMBER, PHONE } from '../constants';
 
-export default function PageCTA({ heading = 'Ready to Take the Next Step?', sub = 'Book a free consultation with our expert counsellors today.' }) {
+export default function PageCTA({
+  heading = 'Ready to Take the Next Step?',
+  sub = 'Book a free consultation with our expert counsellors today.',
+  buttonText = 'Get Free Consultation',
+}) {
   return (
     <section style={{ backgroundColor: '#003c4c' }} className="py-16">
       <div className="max-w-4xl mx-auto px-6 text-center">
@@ -13,7 +17,7 @@ export default function PageCTA({ heading = 'Ready to Take the Next Step?', sub 
             className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-bold text-sm transition-opacity hover:opacity-90"
             style={{ backgroundColor: '#ffa800', color: '#003c4c' }}
           >
-            Get Free Consultation
+            {buttonText}
           </Link>
           <a
             href={`https://wa.me/${WHATSAPP_NUMBER}`}

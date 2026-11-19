@@ -10,6 +10,8 @@ export default function PageHero({ badge, title, subtitle, breadcrumbs = [], bgI
           src={bgImage}
           alt=""
           aria-hidden="true"
+          loading="lazy"
+          decoding="async"
           className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
           style={{ opacity: 0.13 }}
         />

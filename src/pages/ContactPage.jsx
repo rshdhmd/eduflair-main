@@ -2,12 +2,45 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Layout from '../components/Layout';
 import { PHONE, EMAIL, ADDRESS, HOURS, WHATSAPP_NUMBER } from '../constants';
+import { usePageContent } from '../hooks/usePageContent';
+
+const CONTENT_DEFAULTS = {
+  hero_badge: 'Get In Touch',
+  hero_title: 'Contact Us',
+  form_heading: 'Send Us a Message',
+  sidebar_note: 'A counsellor will be in touch within 24 hours.',
+};
 
 export default function ContactPage() {
-  const [form, setForm] = useState({ name: '', email: '', phone: '', service: '', message: '' });
+  const { content } = usePageContent('contact', CONTENT_DEFAULTS);
+  const [form, setForm] = useState({ name: '', email: '', phone: '', service: '', message: '', website: '' });
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState('');
   const handle = (e) => setForm({ ...form, [e.target.name]: e.target.value });
-  const handleSubmit = (e) => { e.preventDefault(); setSent(true); };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSending(true);
+    try {
+      const res = await fetch('/contact.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) {
+        throw new Error(data.error || 'Something went wrong. Please try again.');
+      }
+      setSent(true);
+    } catch (err) {
+      setError(err.message || 'Unable to send. Please email info@eduflair.com.');
+    } finally {
+      setSending(false);
+    }
+  };
+
   const inputClass = 'w-full border border-gray-200 rounded-lg px-4 py-3 text-gray-700 text-sm focus:outline-none focus:ring-2 focus:border-transparent';
 
   return (
@@ -15,8 +48,8 @@ export default function ContactPage() {
       {/* Hero */}
       <div style={{ backgroundColor: '#003c4c' }} className="py-16">
         <div className="max-w-7xl mx-auto px-6">
-          <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: '#ffa800' }}>Get In Touch</p>
-          <h1 className="text-3xl md:text-4xl font-extrabold text-white">Contact Us</h1>
+          <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: '#ffa800' }}>{content.hero_badge}</p>
+          <h1 className="text-3xl md:text-4xl font-extrabold text-white">{content.hero_title}</h1>
         </div>
       </div>
 
@@ -93,13 +126,24 @@ export default function ContactPage() {
                   </svg>
                 </div>
                 <h3 className="font-bold text-xl mb-2" style={{ color: '#003c4c' }}>Message Sent!</h3>
-                <p className="text-gray-500 text-sm mb-6">A counsellor will be in touch within 24 hours.</p>
+                <p className="text-gray-500 text-sm mb-6">{content.sidebar_note}</p>
                 <Link to="/" className="text-sm font-semibold underline" style={{ color: '#003c4c' }}>Back to Home</Link>
               </div>
             ) : (
               <>
-                <h3 className="font-bold text-lg mb-7" style={{ color: '#003c4c' }}>Send Us a Message</h3>
+                <h3 className="font-bold text-lg mb-7" style={{ color: '#003c4c' }}>{content.form_heading}</h3>
                 <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  {/* Honeypot — hidden from users */}
+                  <input
+                    type="text"
+                    name="website"
+                    value={form.website}
+                    onChange={handle}
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    className="absolute left-[-9999px] h-0 w-0 opacity-0"
+                  />
                   <div>
                     <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wide">Full Name *</label>
                     <input name="name" value={form.name} onChange={handle} required placeholder="Your full name" className={inputClass} style={{ '--tw-ring-color': '#003c4c' }} />
@@ -134,9 +178,19 @@ export default function ContactPage() {
                     <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wide">Message</label>
                     <textarea name="message" value={form.message} onChange={handle} rows={4} placeholder="Tell us about your background, goals, or any questions..." className={`${inputClass} resize-none`} />
                   </div>
+                  {error && (
+                    <div className="sm:col-span-2 text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-4 py-3">
+                      {error}
+                    </div>
+                  )}
                   <div className="sm:col-span-2">
-                    <button type="submit" className="text-white font-bold px-10 py-3.5 rounded-lg transition-opacity hover:opacity-90 text-sm" style={{ backgroundColor: '#003c4c' }}>
-                      Send Message →
+                    <button
+                      type="submit"
+                      disabled={sending}
+                      className="text-white font-bold px-10 py-3.5 rounded-lg transition-opacity hover:opacity-90 text-sm disabled:opacity-60"
+                      style={{ backgroundColor: '#003c4c' }}
+                    >
+                      {sending ? 'Sending…' : 'Send Message →'}
                     </button>
                   </div>
                 </form>
@@ -161,7 +215,7 @@ export default function ContactPage() {
             <div className="grid sm:grid-cols-3 gap-8">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">General Inquiries</p>
-                <p className="text-sm font-semibold" style={{ color: '#003c4c' }}>egifl@eduflair.com</p>
+                <p className="text-sm font-semibold" style={{ color: '#003c4c' }}>info@eduflair.com</p>
                 <p className="text-sm font-semibold" style={{ color: '#003c4c' }}>{PHONE}</p>
               </div>
               <div>

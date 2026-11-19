@@ -1,14 +1,16 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { WHATSAPP_NUMBER, FACEBOOK_URL, INSTAGRAM_URL, YOUTUBE_URL } from '../constants';
 import logoBlack from '../assets/images/eduflair black.png';
+import { useCustomCmsPages } from '../hooks/useCustomCmsPages';
 
-const NAV_ITEMS = [
+const BASE_NAV = [
   { label: 'Home', href: '/' },
   { label: 'Ausbildung', href: '/ausbildung-in-germany' },
   {
     label: 'Study Abroad',
     href: '/study-abroad',
+    groupId: 'study-abroad',
     children: [
       { label: 'Study Abroad Overview', href: '/study-abroad' },
       { label: 'Application Process', href: '/application-process' },
@@ -24,6 +26,7 @@ const NAV_ITEMS = [
   {
     label: 'Language & Skill Academy',
     href: '/language-academy',
+    groupId: 'language',
     children: [
       { label: 'Language Academy Overview', href: '/language-academy' },
       { label: 'IELTS Coaching', href: '/ielts-coaching' },
@@ -34,6 +37,7 @@ const NAV_ITEMS = [
   {
     label: 'Placement',
     href: '/placement',
+    groupId: 'placement',
     children: [
       { label: 'Placement & Immigration', href: '/placement' },
       { label: 'Nursing in Canada', href: '/nursing-canada' },
@@ -42,6 +46,7 @@ const NAV_ITEMS = [
       { label: 'Other Destinations', href: '/other-nursing-destinations' },
     ],
   },
+  { label: 'Blog', href: '/blog' },
   {
     label: 'About',
     href: '/our-story',
@@ -63,6 +68,19 @@ const ChevronDown = () => (
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileExpanded, setMobileExpanded] = useState(null);
+  const customPages = useCustomCmsPages();
+
+  const NAV_ITEMS = useMemo(() => {
+    return BASE_NAV.map((item) => {
+      if (!item.groupId || !item.children) return item;
+      const extras = customPages
+        .filter((p) => p.groupId === item.groupId && p.path)
+        .filter((p) => !item.children.some((c) => c.href === p.path))
+        .map((p) => ({ label: p.title, href: p.path }));
+      if (!extras.length) return item;
+      return { ...item, children: [...item.children, ...extras] };
+    });
+  }, [customPages]);
 
   return (
     <nav className="bg-white sticky top-0 z-50 border-b border-gray-100" style={{ boxShadow: '0 1px 12px rgba(0,60,76,0.07)' }}>

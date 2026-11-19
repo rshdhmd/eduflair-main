@@ -22,3 +22,15 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local Netlify folder
+.netlify
+
+# CMS secrets (Hostinger DB credentials)
+public/api/config.php
+public/uploads/*
+!public/uploads/.gitkeep
+!public/uploads/.htaccess
+
+# Local CMS store (generated on first npm run dev)
+local-cms/store.json
